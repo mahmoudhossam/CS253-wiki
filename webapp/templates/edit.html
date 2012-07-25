@@ -4,5 +4,9 @@ Editing page...
 {% endblock %}
 
 {% block content %}
-<textarea></textarea>
+<form method="POST">
+    <textarea name="content"></textarea>
+    <br>
+    <input type="submit">
+</form>
 {% endblock %}
