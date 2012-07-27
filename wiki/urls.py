@@ -1,10 +1,16 @@
 from django.conf.urls import patterns, include, url
+from webapp import views
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
 
 urlpatterns = patterns('',
+        url(r'^$', views.main),
+        url(r'^signup$', views.signup),
+        url(r'^login$', views.login),
+        url(r'(?P<page_name>(?:[a-zA-Z0-9_-]+/?)*)/edit', views.edit),
+        url(r'(?P<page_name>(?:[a-zA-Z0-9_-]+/?)*)', views.page),
     # Examples:
     # url(r'^$', 'wiki.views.home', name='home'),
     # url(r'^wiki/', include('wiki.foo.urls')),
