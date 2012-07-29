@@ -1,5 +1,6 @@
 #Misc. utility functions
 from models import User, Article
+from django.shortcuts import redirect
 import bcrypt
 import re
 
@@ -45,16 +46,17 @@ def login_success(request, user):
 
 def create_user(username, pw, email=None):
     hashed = hash_password(pw)
-    user = User(username=usr, hashed_pw=hashed[0], salt=hashed[1], email=email)
+    user = User(username=username, hashed_pw=hashed[0], salt=hashed[1], email=email)
     user.save()
     return user
 
 def is_logged_in(request):
-    cookie = request.COOKIES['name']
-    userid, pw_hash = cookie.split('|')
-    user = get_user(userid=userid)
-    if user and pw_hash == user.hashed_pw:
-        return True
+    cookie = request.COOKIES.get('name')
+    if cookie:
+        userid, pw_hash = cookie.split('|')
+        user = get_user(userid=userid)
+        if user and pw_hash == user.hashed_pw:
+            return True
     return False
 
 def validate_login(username, password):

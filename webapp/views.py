@@ -59,7 +59,7 @@ def signup(request):
         if error_occurred:
             return TemplateResponse(request, signup_template, context=c)
         else:
-            user = create_user(username, pw, email)
+            user = create_user(usr, pw, email)
             return login_success(request, user)            
 
 def login(request):
@@ -79,8 +79,8 @@ def login(request):
 
 def edit(request, page_name):
     if is_logged_in(request):
+        page = get_page(page_name)
         if request.method == 'GET':
-            page = get_page(page_name)
             if page:
                 return TemplateResponse(request, 'edit.html', context={'page': page})
             else:
@@ -88,8 +88,11 @@ def edit(request, page_name):
 
         elif request.method == 'POST':
             content = request.POST['content']
-            article = Article(title=page_name, content=content)
-            article.save()
+            if page:
+                page.content = content
+            else:
+                page = Article(title=page_name, content=content)
+            page.save()
             return redirect('/%s' % page_name)
     else:
-        return TemplateResponse(request, 'signup.html')
+        return redirect('/signup')
