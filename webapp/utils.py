@@ -37,3 +37,29 @@ def valid_password(pw):
 def valid_email(email):
     email_re = re.compile("^[\S]+@[\S]+\.[\S]+$")
     return email_re.match(email)
+
+def login_success(request, user):
+    r = redirect('/')
+    r.set_cookie('name', value='%s|%s' % (user.pk, user.hashed_pw))
+    return r
+
+def create_user(username, pw, email=None):
+    hashed = hash_password(pw)
+    user = User(username=usr, hashed_pw=hashed[0], salt=hashed[1], email=email)
+    user.save()
+    return user
+
+def is_logged_in(request):
+    cookie = request.COOKIES['name']
+    userid, pw_hash = cookie.split('|')
+    user = get_user(userid=userid)
+    if user and pw_hash == user.hashed_pw:
+        return True
+    return False
+
+def validate_login(username, password):
+    user = User.objects.get(username=username)
+    pw_hash = hash_password(password, salt=user.salt)
+    if pw_hash == user.hashed_pw:
+        return True
+    return False
