@@ -10,7 +10,7 @@ def page(request, page_name):
         return TemplateResponse(request, 'view.html', context={'page': page,
             'logged_in': logged_in})
     else:
-        return redirect('/%s/edit' % page_name)
+        return redirect('/_edit/%s' % page_name)
 
 def main(request):
     return TemplateResponse(request, 'main.html')
